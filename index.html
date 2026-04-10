@@ -29,79 +29,132 @@
             min-height: 100vh; padding-bottom: 24px; transition: var(--transition-theme);
             -webkit-tap-highlight-color: transparent;
         }
-        /* Тёмная тема по умолчанию — добавляем класс dark сразу */
-        body { background: #1a1b1e; color: #f0f0f0; }
-        body.light { background: #f5f7fa; color: #1e1f22; }
-        body.dark { background: #1a1b1e; color: #f0f0f0; }
-        /* Переопределяем переменные для начальной тёмной темы */
-        body { --bg: #1a1b1e; --card-bg: #2c2d30; --text: #f0f0f0; --hint: #9a9b9e; --divider: rgba(255,255,255,0.08); }
-        body.light { --bg: #f5f7fa; --card-bg: #ffffff; --text: #1e1f22; --hint: #8e8e93; --divider: rgba(0,0,0,0.06); }
-
         .app-container { max-width: 480px; margin: 0 auto; padding: 16px 16px 28px; }
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s; pointer-events: none; }
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.4s; pointer-events: none;
+        }
         .splash-content { text-align: center; animation: fadePulse 1.5s infinite; }
-        .splash-logo { width: 90px; height: 90px; background: linear-gradient(145deg, #13294b, #0b1a2f); border-radius: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 48px; box-shadow: 0 20px 30px rgba(0,0,0,0.2); }
-        @keyframes fadePulse { 0% { opacity: 0.8; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.8; transform: scale(0.98); } }
+        .splash-logo {
+            width: 90px; height: 90px; background: linear-gradient(145deg, #13294b, #0b1a2f);
+            border-radius: 28px; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; color: white; font-size: 48px; box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+        }
+        @keyframes fadePulse {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.98); }
+        }
         .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .logo-icon { width: 44px; height: 44px; background: linear-gradient(145deg, #13294b, #0b1a2f); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
-        .tabs-container { display: flex; background: var(--card-bg); border-radius: 24px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--divider); }
-        .tab-btn { flex: 1; padding: 12px 0; border: none; background: transparent; font-weight: 600; font-size: 15px; border-radius: 20px; color: var(--hint); transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+        .logo-icon {
+            width: 44px; height: 44px; background: linear-gradient(145deg, #13294b, #0b1a2f);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px;
+        }
+        .logo-text h1 { font-size: 22px; font-weight: 700; }
+        .logo-text span { font-size: 13px; font-weight: 500; color: var(--hint); display: block; }
+        .theme-toggle {
+            background: var(--card-bg); border: 1px solid var(--divider); border-radius: 40px;
+            padding: 8px 12px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .theme-toggle i { font-size: 18px; width: 20px; text-align: center; }
+        .theme-toggle span { font-weight: 500; font-size: 14px; }
+        .tabs-container {
+            display: flex; background: var(--card-bg); border-radius: 24px; padding: 4px;
+            margin-bottom: 24px; border: 1px solid var(--divider);
+        }
+        .tab-btn {
+            flex: 1; padding: 12px 0; border: none; background: transparent; font-weight: 600;
+            font-size: 15px; border-radius: 20px; color: var(--hint); transition: all 0.25s;
+            display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
+        }
         .tab-btn.active { background: var(--button); color: var(--button-text); }
-        .card { background: var(--card-bg); border-radius: 26px; padding: 18px 16px; box-shadow: 0 10px 22px rgba(0,0,0,0.02); border: 1px solid var(--divider); }
+        .card {
+            background: var(--card-bg); border-radius: 26px; padding: 18px 16px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.02); border: 1px solid var(--divider);
+        }
+        .rating-toggle {
+            display: flex; gap: 8px; background: var(--bg); padding: 6px; border-radius: 40px;
+            margin-bottom: 16px; border: 1px solid var(--divider);
+        }
+        .rating-toggle-btn {
+            flex: 1; padding: 10px; border-radius: 30px; font-weight: 600; font-size: 14px;
+            background: transparent; border: none; color: var(--hint); cursor: pointer;
+        }
+        .rating-toggle-btn.active { background: var(--button); color: white; }
         .uefa-table { width: 100%; border-collapse: collapse; }
-        .uefa-table td { padding: 12px 0; border-bottom: 1px solid var(--divider); }
+        .uefa-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--hint); padding-bottom: 10px; }
+        .uefa-table td { padding: 14px 0; border-bottom: 1px solid var(--divider); font-weight: 500; }
+        .uefa-table tr:last-child td { border-bottom: none; }
         .team-cell { display: flex; align-items: center; gap: 12px; }
         .team-logo {
-            width: 32px; height: 32px; background: linear-gradient(145deg, #2c3e50, #1a252f);
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 14px; overflow: hidden;
+            width: 32px; height: 32px; border-radius: 10px; background: var(--bg);
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            font-weight: 700; color: var(--text); border: 1px solid var(--divider);
         }
         .team-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .league-logo {
+            width: 28px; height: 28px; border-radius: 8px; background: var(--bg);
+            display: flex; align-items: center; justify-content: center; margin-right: 8px;
+        }
+        .league-logo img { width: 100%; height: 100%; object-fit: contain; }
         .hidden { display: none !important; }
-        .loader { width: 30px; height: 30px; border: 3px solid var(--divider); border-top-color: var(--button); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
+        .loader {
+            width: 30px; height: 30px; border: 3px solid var(--divider);
+            border-top-color: var(--button); border-radius: 50%; animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         .empty-state { text-align: center; padding: 30px; color: var(--hint); }
-        .rating-toggle { display: flex; gap: 8px; background: var(--bg); padding: 6px; border-radius: 40px; margin-bottom: 16px; border: 1px solid var(--divider); }
-        .rating-toggle-btn { flex: 1; padding: 10px; border-radius: 30px; font-weight: 600; font-size: 14px; background: transparent; border: none; color: var(--hint); cursor: pointer; }
-        .rating-toggle-btn.active { background: var(--button); color: white; }
         .leagues-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
         .league-chip {
             background: var(--card-bg); border: 1px solid var(--divider); border-radius: 40px;
             padding: 8px 18px; font-weight: 600; white-space: nowrap; cursor: pointer;
             display: flex; align-items: center; gap: 8px;
         }
-        .league-chip img { width: 20px; height: 20px; border-radius: 6px; object-fit: cover; }
         .league-chip.active { background: var(--button); color: white; }
-        .filter-select { background: var(--card-bg); border: 1px solid var(--divider); border-radius: 30px; padding: 10px 16px; width: 100%; margin-bottom: 16px; color: var(--text); }
-        .match-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--divider); }
+        .filter-select {
+            background: var(--card-bg); border: 1px solid var(--divider); border-radius: 30px;
+            padding: 10px 16px; width: 100%; margin-bottom: 16px; color: var(--text);
+        }
+        .match-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 0; border-bottom: 1px solid var(--divider);
+        }
         .odds-block { display: flex; gap: 8px; }
-        .odd-btn { background: var(--bg); border: 1px solid var(--divider); border-radius: 14px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; }
+        .odd-btn {
+            background: var(--bg); border: 1px solid var(--divider); border-radius: 14px;
+            padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer;
+        }
         .odd-value { font-size: 17px; font-weight: 700; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); display: flex; align-items: flex-end; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); display: flex;
+            align-items: flex-end; justify-content: center; z-index: 1000;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
         .modal.active { opacity: 1; pointer-events: auto; }
-        .modal-sheet { background: var(--card-bg); width: 100%; max-width: 480px; border-radius: 32px 32px 0 0; padding: 24px 20px 30px; transform: translateY(100%); transition: transform 0.3s; }
+        .modal-sheet {
+            background: var(--card-bg); width: 100%; max-width: 480px;
+            border-radius: 32px 32px 0 0; padding: 24px 20px 30px;
+            transform: translateY(100%); transition: transform 0.3s;
+        }
         .modal.active .modal-sheet { transform: translateY(0); }
         .admin-panel { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--divider); }
-        .admin-btn { background: var(--button); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: 600; cursor: pointer; }
-        input { background: var(--bg); border: 1px solid var(--divider); border-radius: 12px; padding: 10px; color: var(--text); width: 80px; }
-
-        /* Новый переключатель темы */
-        .theme-toggle {
-            background: var(--card-bg); border: 1px solid var(--divider);
-            border-radius: 30px; padding: 6px; display: flex; align-items: center;
-            cursor: pointer; transition: all 0.2s;
+        .admin-btn {
+            background: var(--button); color: white; border: none; padding: 8px 16px;
+            border-radius: 30px; font-weight: 600; cursor: pointer;
         }
-        .theme-toggle .toggle-icon {
-            width: 32px; height: 32px; border-radius: 30px; display: flex;
-            align-items: center; justify-content: center; font-size: 18px;
-            background: var(--button); color: white;
+        input {
+            background: var(--bg); border: 1px solid var(--divider); border-radius: 12px;
+            padding: 10px; color: var(--text); width: 80px;
         }
-        .theme-toggle span { margin: 0 8px; font-weight: 500; }
-        body.light .theme-toggle .toggle-icon { background: #f39c12; }
     </style>
 </head>
-<body class="dark"> <!-- Тёмная тема по умолчанию -->
+<body class="dark">
     <div id="splash-screen">
         <div class="splash-content">
             <div class="splash-logo"><i class="fas fa-futbol"></i></div>
@@ -114,25 +167,23 @@
         <header class="app-header">
             <div class="logo" id="adminTrigger">
                 <div class="logo-icon"><i class="fas fa-futbol"></i></div>
-                <div class="logo-text"><h1>WStory</h1><span>система изучения игр</span></div>
-            </div>
-            <div class="header-actions">
-                <div class="theme-toggle" id="themeToggle">
-                    <div class="toggle-icon"><i class="fas fa-moon"></i></div>
-                    <span>Тема</span>
+                <div class="logo-text">
+                    <h1>WStory</h1>
+                    <span>система изучения игр</span>
                 </div>
-                <div class="live-badge"><i class="fas fa-circle" style="color: #2ecc71; font-size: 10px;"></i> LIVE</div>
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+                <span>Тема</span>
             </div>
         </header>
 
-        <!-- Основные вкладки -->
         <div class="tabs-container">
             <button class="tab-btn active" data-tab="rating"><i class="fas fa-trophy"></i> Рейтинг</button>
             <button class="tab-btn" data-tab="leagues"><i class="fas fa-table"></i> Лиги</button>
             <button class="tab-btn" data-tab="matches"><i class="fas fa-calendar"></i> Матчи</button>
         </div>
 
-        <!-- Контейнеры вкладок -->
         <div id="rating-tab" class="tab-pane">
             <div class="rating-toggle">
                 <button class="rating-toggle-btn active" data-rating="clubs">🏆 Клубы</button>
@@ -176,9 +227,10 @@
             if (tg) { tg.ready(); tg.expand(); }
 
             const app = {
-                leagues: [], teams: [], matches: [], teamStatsMap: new Map(),
-                leagueCoeffMap: new Map(), clubCoeffMap: new Map(),
-                currentRatingType: 'clubs', selectedLeagueId: null, selectedMatchLeague: 'all', isAdmin: false,
+                leagues: [], teams: [], matches: [],
+                teamStatsMap: new Map(), leagueCoeffMap: new Map(), clubCoeffMap: new Map(),
+                currentRatingType: 'clubs', selectedLeagueId: null, selectedMatchLeague: 'all',
+                isAdmin: false,
 
                 async loadData() {
                     try {
@@ -231,8 +283,10 @@
                     const awayStats = this.teamStatsMap.get(awayId);
                     let homeStr = homeC * 1.1, awayStr = awayC;
                     if (homeStats && awayStats) {
-                        homeStr += (homeStats.points - awayStats.points) * 0.2 + (homeStats.goal_diff - awayStats.goal_diff) * 0.3;
-                        awayStr -= (homeStats.points - awayStats.points) * 0.2 + (homeStats.goal_diff - awayStats.goal_diff) * 0.3;
+                        const formBonus = (homeStats.points - awayStats.points) * 0.2;
+                        const gdBonus = (homeStats.goal_diff - awayStats.goal_diff) * 0.3;
+                        homeStr += formBonus + gdBonus;
+                        awayStr -= formBonus + gdBonus;
                     }
                     homeStr = Math.max(homeStr, 5); awayStr = Math.max(awayStr, 5);
                     const total = homeStr + awayStr + 2.5;
@@ -245,9 +299,10 @@
                     };
                 },
 
-                // Вспомогательная функция для рендера логотипа
                 renderLogo(url, fallbackText) {
-                    if (url) return `<img src="${url}" alt="${fallbackText}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+                    if (url && url.startsWith('http')) {
+                        return `<img src="${url}" alt="logo" onerror="this.style.display='none'; this.nextSibling.style.display='flex';">`;
+                    }
                     return `<span style="display:flex; align-items:center; justify-content:center; width:100%; height:100%;">${fallbackText}</span>`;
                 },
 
@@ -261,9 +316,9 @@
                             const team = this.teams.find(t => t.id === teamId);
                             const stats = this.teamStatsMap.get(teamId);
                             if (!team) return;
-                            const logoHtml = team.logo_url ? `<img src="${team.logo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.style.display='none';">` : team.short_name || team.name.substring(0,2);
-                            html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${team.logo_url ? `<img src="${team.logo_url}">` : team.short_name || team.name.substring(0,2)}</div>${team.name}</div></td>
-                                <td>${coeff.toFixed(3)}</td><td class="form-badge">${stats?.form ? stats.form.split('').map(ch => `<span class="${ch==='W'?'win':ch==='D'?'draw':'loss'}">${ch}</span>`).join('') : ''}</td></tr>`;
+                            const logoHtml = team.logo_url ? `<img src="${team.logo_url}" onerror="this.style.display='none';">` : team.short_name || team.name.substring(0,2);
+                            html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${logoHtml}</div>${team.name}</div></td>
+                                <td>${coeff.toFixed(3)}</td><td>${stats?.form || ''}</td></tr>`;
                         });
                         html += '</tbody></table>'; container.innerHTML = html;
                     } else {
@@ -272,7 +327,7 @@
                         sorted.forEach(([lid, coeff], idx) => {
                             const league = this.leagues.find(l => l.id === lid);
                             if (!league) return;
-                            const logoHtml = league.logo_url ? `<img src="${league.logo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">` : league.country || '🌍';
+                            const logoHtml = league.logo_url ? `<img src="${league.logo_url}" onerror="this.style.display='none';">` : league.country || '🌍';
                             html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${logoHtml}</div>${league.name}</div></td><td>${coeff.toFixed(3)}</td></tr>`;
                         });
                         html += '</tbody></table>'; container.innerHTML = html;
@@ -282,7 +337,7 @@
                 renderLeagues() {
                     const chips = document.getElementById('leaguesChips');
                     chips.innerHTML = this.leagues.map(l => {
-                        const logo = l.logo_url ? `<img src="${l.logo_url}">` : l.country || '🌍';
+                        const logo = l.logo_url ? `<img src="${l.logo_url}" style="width:20px;height:20px;border-radius:4px;">` : l.country || '🌍';
                         return `<div class="league-chip ${this.selectedLeagueId === l.id ? 'active' : ''}" data-id="${l.id}">${logo} ${l.name}</div>`;
                     }).join('');
                     document.getElementById('leagueCount').innerText = `${this.leagues.length} лиг`;
@@ -300,22 +355,18 @@
                     const leagueTeams = this.teams.filter(t => t.league_id === this.selectedLeagueId);
                     const stats = leagueTeams.map(t => ({ team: t, stats: this.teamStatsMap.get(t.id) || { played:0, wins:0, draws:0, losses:0, goals_for:0, goals_against:0, goal_diff:0, points:0 } }))
                         .sort((a,b) => b.stats.points - a.stats.points || b.stats.goal_diff - a.stats.goal_diff);
-                    let html = `<div style="display:flex; gap:10px; margin-bottom:16px;">`;
-                    if (league.logo_url) html += `<img src="${league.logo_url}" style="width:32px;height:32px;border-radius:8px;">`;
-                    else html += `<span style="font-size:28px;">${league.country || '🌍'}</span>`;
-                    html += `<h3>${league.name}</h3></div>`;
+                    let html = `<div style="display:flex; gap:10px; margin-bottom:16px;"><span style="font-size:28px;">${league.country || '🌍'}</span><h3>${league.name}</h3></div>`;
                     html += `<table class="uefa-table"><thead><tr><th>#</th><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>Мячи</th><th>О</th></tr></thead><tbody>`;
                     stats.forEach((item, idx) => {
                         const s = item.stats;
-                        const team = item.team;
-                        const logoHtml = team.logo_url ? `<img src="${team.logo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">` : team.short_name || team.name.substring(0,2);
-                        html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${logoHtml}</div>${team.name}</div></td>
+                        const logoHtml = item.team.logo_url ? `<img src="${item.team.logo_url}" onerror="this.style.display='none';">` : item.team.short_name || item.team.name.substring(0,2);
+                        html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${logoHtml}</div>${item.team.name}</div></td>
                             <td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.goals_for}:${s.goals_against}</td><td><strong>${s.points}</strong></td></tr>`;
                     });
                     html += '</tbody></table>'; container.innerHTML = html;
                 },
 
-                renderMatches() { /* ... без изменений, можно добавить логотипы в будущем */ 
+                renderMatches() {
                     const filter = document.getElementById('leagueFilterSelect');
                     filter.innerHTML = '<option value="all">Все лиги</option>' + this.leagues.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
                     filter.value = this.selectedMatchLeague;
@@ -338,26 +389,32 @@
                         const odds = this.calculateOdds(m.home_team_id, m.away_team_id);
                         const date = new Date(m.match_date);
                         const time = date.toLocaleDateString('ru',{day:'numeric',month:'short'}) + ' ' + date.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
-                        const homeLogo = home.logo_url ? `<img src="${home.logo_url}" style="width:100%;height:100%;">` : home.short_name || home.name.substring(0,2);
-                        const awayLogo = away.logo_url ? `<img src="${away.logo_url}" style="width:100%;height:100%;">` : away.short_name || away.name.substring(0,2);
-                        html += `<div class="match-item" data-match-id="${m.id}">
-                            <div class="match-info"><div class="match-teams">
-                                <div class="match-team"><div class="team-logo">${homeLogo}</div>${home.name}</div>
-                                <div class="match-team"><div class="team-logo">${awayLogo}</div>${away.name}</div>
-                            </div><div style="font-size:13px; color:var(--hint); margin-top:6px;"><i class="far fa-clock"></i> ${time}</div></div>
+                        html += `<div class="match-item"><div><div class="team-cell"><div class="team-logo">${home.logo_url ? `<img src="${home.logo_url}">` : home.short_name}</div>${home.name}</div>
+                            <div class="team-cell"><div class="team-logo">${away.logo_url ? `<img src="${away.logo_url}">` : away.short_name}</div>${away.name}</div>
+                            <div style="font-size:13px; color:var(--hint); margin-top:6px;">${time}</div></div>
                             <div class="odds-block">
-                                <div class="odd-btn" data-bet="home"><div class="odd-label">1</div><div class="odd-value">${odds.home}</div></div>
-                                <div class="odd-btn" data-bet="draw"><div class="odd-label">X</div><div class="odd-value">${odds.draw}</div></div>
-                                <div class="odd-btn" data-bet="away"><div class="odd-label">2</div><div class="odd-value">${odds.away}</div></div>
-                            </div>
-                        </div>`;
+                                <div class="odd-btn"><div class="odd-label">1</div><div class="odd-value">${odds.home}</div></div>
+                                <div class="odd-btn"><div class="odd-label">X</div><div class="odd-value">${odds.draw}</div></div>
+                                <div class="odd-btn"><div class="odd-label">2</div><div class="odd-value">${odds.away}</div></div>
+                            </div></div>`;
                     });
                     container.innerHTML = html;
                 },
 
-                renderAdminPanel() { /* ... */ },
-                async updateMatchResult(matchId, homeScore, awayScore) { /* ... */ },
-                switchTab(tabId) { /* ... */ },
+                renderAdminPanel() { /* как ранее */ },
+                async updateMatchResult(matchId, homeScore, awayScore) {
+                    await supabase.from('matches').update({ home_score: homeScore, away_score: awayScore, status: 'finished' }).eq('id', matchId);
+                    alert('Сохранено'); await this.loadData(); this.renderMatches(); this.renderRating(); this.renderLeagues();
+                },
+                switchTab(tabId) {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+                    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    if (tabId === 'rating') this.renderRating();
+                    else if (tabId === 'leagues') this.renderLeagues();
+                    else if (tabId === 'matches') this.renderMatches();
+                },
                 closeModal() { document.getElementById('matchModal').classList.remove('active'); }
             };
 
@@ -369,50 +426,29 @@
                 }, 1200);
                 await app.loadData();
                 app.renderRating();
-
                 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => app.switchTab(b.dataset.tab)));
                 document.querySelectorAll('.rating-toggle-btn').forEach(btn => btn.addEventListener('click', function() {
                     document.querySelectorAll('.rating-toggle-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    app.currentRatingType = this.dataset.rating;
-                    app.renderRating();
+                    this.classList.add('active'); app.currentRatingType = this.dataset.rating; app.renderRating();
                 }));
-
-                // Тема (тёмная по умолчанию)
-                const body = document.body;
-                const themeToggle = document.getElementById('themeToggle');
-                const updateThemeUI = () => {
-                    const isDark = body.classList.contains('dark');
-                    const icon = themeToggle.querySelector('.toggle-icon i');
-                    if (isDark) {
-                        icon.className = 'fas fa-moon';
-                        themeToggle.querySelector('.toggle-icon').style.background = '#2ea6ff';
-                    } else {
-                        icon.className = 'fas fa-sun';
-                        themeToggle.querySelector('.toggle-icon').style.background = '#f39c12';
-                    }
-                };
-                // Устанавливаем начальное состояние (тёмная)
-                body.classList.add('dark'); body.classList.remove('light');
-                updateThemeUI();
-
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark');
-                    body.classList.toggle('light');
-                    updateThemeUI();
-                });
-
-                // Админ-режим (долгое нажатие)
                 const logo = document.getElementById('adminTrigger');
                 let timer;
-                const enableAdmin = () => { app.isAdmin = !app.isAdmin; alert('Админ-режим: ' + (app.isAdmin ? 'ВКЛ' : 'ВЫКЛ')); if (document.querySelector('#matches-tab:not(.hidden)')) app.renderMatches(); };
+                const enableAdmin = () => { app.isAdmin = !app.isAdmin; alert('Админ: '+(app.isAdmin?'ВКЛ':'ВЫКЛ')); };
                 logo.addEventListener('mousedown', () => { timer = setTimeout(enableAdmin, 1000); });
                 logo.addEventListener('mouseup', () => clearTimeout(timer));
                 logo.addEventListener('mouseleave', () => clearTimeout(timer));
                 logo.addEventListener('touchstart', () => { timer = setTimeout(enableAdmin, 1000); });
                 logo.addEventListener('touchend', () => clearTimeout(timer));
-
-                document.querySelector('.modal').addEventListener('click', e => { if (e.target.classList.contains('modal')) app.closeModal(); });
+                const themeToggle = document.getElementById('themeToggle');
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark');
+                    const icon = themeToggle.querySelector('i');
+                    if (document.body.classList.contains('dark')) {
+                        icon.className = 'fas fa-moon'; themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Тема</span>';
+                    } else {
+                        icon.className = 'fas fa-sun'; themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Тема</span>';
+                    }
+                });
             });
         })();
     </script>
