@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WStory · Система изучения игр</title>
+    <title>WStory · Виртуальный футбол</title>
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Telegram Mini App SDK -->
@@ -13,7 +13,6 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ... все стили остаются без изменений ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #f5f7fa; --card-bg: #ffffff; --text: #1e1f22; --hint: #8e8e93;
@@ -45,30 +44,22 @@
         .hidden { display: none !important; }
         .loader { width: 30px; height: 30px; border: 3px solid var(--divider); border-top-color: var(--button); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .admin-panel { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--divider); }
-        .admin-btn { background: var(--button); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: 600; cursor: pointer; }
-        input, select { background: var(--bg); border: 1px solid var(--divider); border-radius: 12px; padding: 10px; color: var(--text); width: 100%; margin-bottom: 10px; }
+        .empty-state { text-align: center; padding: 30px; color: var(--hint); }
+        .leagues-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
+        .league-chip { background: var(--card-bg); border: 1px solid var(--divider); border-radius: 40px; padding: 8px 18px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+        .league-chip.active { background: var(--button); color: white; }
+        .filter-select { background: var(--card-bg); border: 1px solid var(--divider); border-radius: 30px; padding: 10px 16px; width: 100%; margin-bottom: 16px; color: var(--text); }
+        .match-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--divider); }
+        .odds-block { display: flex; gap: 8px; }
+        .odd-btn { background: var(--bg); border: 1px solid var(--divider); border-radius: 14px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; }
+        .odd-value { font-size: 17px; font-weight: 700; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); display: flex; align-items: flex-end; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .modal.active { opacity: 1; pointer-events: auto; }
         .modal-sheet { background: var(--card-bg); width: 100%; max-width: 480px; border-radius: 32px 32px 0 0; padding: 24px 20px 30px; transform: translateY(100%); transition: transform 0.3s; }
         .modal.active .modal-sheet { transform: translateY(0); }
-        .error-message { color: var(--danger); text-align: center; padding: 20px; }
-        .rating-toggle { display: flex; gap: 8px; background: var(--bg); padding: 6px; border-radius: 40px; margin-bottom: 16px; border: 1px solid var(--divider); }
-        .rating-toggle-btn { flex: 1; padding: 10px; border-radius: 30px; font-weight: 600; font-size: 14px; background: transparent; border: none; color: var(--hint); cursor: pointer; }
-        .rating-toggle-btn.active { background: var(--button); color: white; }
-        .leagues-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
-        .league-chip { background: var(--card-bg); border: 1px solid var(--divider); border-radius: 40px; padding: 8px 18px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s; font-size: 14px; }
-        .league-chip.active { background: var(--button); color: white; border-color: transparent; }
-        .filter-select { background: var(--card-bg); border: 1px solid var(--divider); border-radius: 30px; padding: 10px 16px; font-family: inherit; font-weight: 500; color: var(--text); width: 100%; outline: none; margin-bottom: 16px; }
-        .match-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--divider); }
-        .odds-block { display: flex; gap: 8px; }
-        .odd-btn { background: var(--bg); border: 1px solid var(--divider); border-radius: 14px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; }
-        .odd-btn:active { background: var(--button); color: white; }
-        .odd-value { font-size: 17px; font-weight: 700; }
-        .form-badge span.win { color: var(--success); }
-        .form-badge span.draw { color: #f39c12; }
-        .form-badge span.loss { color: var(--danger); }
-        .empty-state { text-align: center; padding: 30px; color: var(--hint); }
+        .admin-panel { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--divider); }
+        .admin-btn { background: var(--button); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: 600; cursor: pointer; }
+        input { background: var(--bg); border: 1px solid var(--divider); border-radius: 12px; padding: 10px; color: var(--text); width: 80px; }
     </style>
 </head>
 <body>
@@ -76,7 +67,7 @@
         <div class="splash-content">
             <div class="splash-logo"><i class="fas fa-futbol"></i></div>
             <div class="splash-title">WStory</div>
-            <div class="splash-sub">Система изучение игр</div>
+            <div class="splash-sub">система изучения игр</div>
         </div>
     </div>
 
@@ -84,7 +75,7 @@
         <header class="app-header">
             <div class="logo" id="adminTrigger">
                 <div class="logo-icon"><i class="fas fa-futbol"></i></div>
-                <div class="logo-text"><h1>WStory</h1><span>Система изучение игр</span></div>
+                <div class="logo-text"><h1>WStory</h1><span>система изучения игр</span></div>
             </div>
             <div class="header-actions">
                 <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun"></i><span>Тема</span></div>
@@ -114,7 +105,8 @@
             <div id="matches-tab" class="hidden">
                 <div class="section-title"><h3>⚽ Предстоящие матчи</h3></div>
                 <select class="filter-select" id="leagueFilterSelect"></select>
-                <div class="card"><div id="matchesList"><div class="loader"></div></div>
+                <div class="card">
+                    <div id="matchesList"><div class="loader"></div></div>
                     <div id="adminMatchPanel" class="admin-panel hidden"></div>
                 </div>
             </div>
@@ -133,22 +125,12 @@
 
     <script>
         (function(){
-            // ---------- Конфигурация Supabase ----------
             const SUPABASE_URL = 'https://uutcoqfkbijosljtrnsn.supabase.co';
-            // ВАЖНО: используем ANON ключ, а не service_role!
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dGNvcWZrYmlqb3NsanRybnNuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTc3OTA0NCwiZXhwIjoyMDkxMzU1MDQ0fQ.GfYMIVtrgs-pT6EZyd9Dxn9ZW4_wMxZIoprtq2zB8us'; // Нужно заменить на реальный anon ключ из Supabase -> Project Settings -> API
-
-            // Если вы не знаете anon ключ, временно можно использовать service_role, но он НЕБЕЗОПАСЕН.
-            // Лучше заменить на anon ключ из настроек проекта.
-            const SUPABASE_KEY = SUPABASE_ANON_KEY; 
-            
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dGNvcWZrYmlqb3NsanRybnNuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTc3OTA0NCwiZXhwIjoyMDkxMzU1MDQ0fQ.GfYMIVtrgs-pT6EZyd9Dxn9ZW4_wMxZIoprtq2zB8us';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-            // Telegram
             const tg = window.Telegram?.WebApp;
             if (tg) { tg.ready(); tg.expand(); }
 
-            // Состояние
             const app = {
                 leagues: [],
                 teams: [],
@@ -160,50 +142,35 @@
                 selectedLeagueId: null,
                 selectedMatchLeague: 'all',
                 isAdmin: false,
-                loadingError: null,
 
                 async loadData() {
                     try {
-                        console.log('🔄 Загрузка данных из Supabase...');
-                        
-                        // Загружаем лиги
-                        const { data: leaguesData, error: leaguesError } = await supabase.from('leagues').select('*');
-                        if (leaguesError) throw new Error(`Ошибка leagues: ${leaguesError.message}`);
-                        this.leagues = leaguesData || [];
-                        console.log(`✅ Лиги загружены: ${this.leagues.length}`);
+                        const [leaguesRes, teamsRes, matchesRes, statsRes] = await Promise.all([
+                            supabase.from('leagues').select('*'),
+                            supabase.from('teams').select('*'),
+                            supabase.from('matches').select('*'),
+                            supabase.from('team_stats').select('*')
+                        ]);
+                        if (leaguesRes.error) throw leaguesRes.error;
+                        if (teamsRes.error) throw teamsRes.error;
+                        if (matchesRes.error) throw matchesRes.error;
+                        if (statsRes.error) throw statsRes.error;
 
-                        // Загружаем команды
-                        const { data: teamsData, error: teamsError } = await supabase.from('teams').select('*');
-                        if (teamsError) throw new Error(`Ошибка teams: ${teamsError.message}`);
-                        this.teams = teamsData || [];
-                        console.log(`✅ Команды загружены: ${this.teams.length}`);
-
-                        // Загружаем матчи
-                        const { data: matchesData, error: matchesError } = await supabase.from('matches').select('*');
-                        if (matchesError) throw new Error(`Ошибка matches: ${matchesError.message}`);
-                        this.matches = matchesData || [];
-                        console.log(`✅ Матчи загружены: ${this.matches.length}`);
-
-                        // Загружаем статистику из представления team_stats
-                        const { data: statsData, error: statsError } = await supabase.from('team_stats').select('*');
-                        if (statsError) throw new Error(`Ошибка team_stats: ${statsError.message}`);
-                        if (statsData) {
-                            statsData.forEach(s => this.teamStatsMap.set(s.team_id, s));
-                        }
-                        console.log(`✅ Статистика загружена: ${this.teamStatsMap.size} записей`);
-
+                        this.leagues = leaguesRes.data || [];
+                        this.teams = teamsRes.data || [];
+                        this.matches = matchesRes.data || [];
+                        this.teamStatsMap.clear();
+                        (statsRes.data || []).forEach(s => this.teamStatsMap.set(s.team_id, s));
                         this.calculateCoefficients();
-                        this.loadingError = null;
                         return true;
                     } catch (e) {
-                        console.error('❌ Ошибка загрузки:', e);
-                        this.loadingError = e.message;
+                        console.error('Ошибка загрузки:', e);
                         return false;
                     }
                 },
 
                 calculateCoefficients() {
-                    // ... (без изменений)
+                    // Коэффициенты лиг
                     this.leagues.forEach(league => {
                         const leagueTeams = this.teams.filter(t => t.league_id === league.id);
                         let totalPoints = 0, totalGames = 0;
@@ -214,21 +181,35 @@
                         const avg = totalGames ? (totalPoints / totalGames) * 2.5 : 10;
                         this.leagueCoeffMap.set(league.id, +avg.toFixed(3));
                     });
+                    // Клубные коэффициенты
                     this.teams.forEach(team => {
                         const leagueCoef = this.leagueCoeffMap.get(team.league_id) || 10;
                         const stats = this.teamStatsMap.get(team.id);
                         const perf = stats ? (stats.points / Math.max(stats.played, 1)) * 2.2 : 5;
-                        this.clubCoeffMap.set(team.id, +(leagueCoef * 0.4 + perf).toFixed(3));
+                        const baseCoef = team.coefficient || 0;
+                        const finalCoef = baseCoef > 0 ? baseCoef : +(leagueCoef * 0.4 + perf).toFixed(3);
+                        this.clubCoeffMap.set(team.id, finalCoef);
                     });
                 },
 
                 calculateOdds(homeId, awayId) {
-                    // ... (без изменений)
                     const homeC = this.clubCoeffMap.get(homeId) || 20;
                     const awayC = this.clubCoeffMap.get(awayId) || 20;
+                    const homeStats = this.teamStatsMap.get(homeId);
+                    const awayStats = this.teamStatsMap.get(awayId);
                     let homeStr = homeC * 1.1, awayStr = awayC;
+                    if (homeStats && awayStats) {
+                        const formBonus = (homeStats.points - awayStats.points) * 0.2;
+                        const gdBonus = (homeStats.goal_diff - awayStats.goal_diff) * 0.3;
+                        homeStr += formBonus + gdBonus;
+                        awayStr -= formBonus + gdBonus;
+                    }
+                    homeStr = Math.max(homeStr, 5);
+                    awayStr = Math.max(awayStr, 5);
                     const total = homeStr + awayStr + 2.5;
-                    let homeProb = homeStr / total, awayProb = awayStr / total, drawProb = 1 - homeProb - awayProb;
+                    let homeProb = homeStr / total;
+                    let awayProb = awayStr / total;
+                    let drawProb = 1 - homeProb - awayProb;
                     const minOdd = 1.03;
                     let homeOdd = Math.max(minOdd, 1 / Math.max(homeProb, 0.12)).toFixed(2);
                     let drawOdd = Math.max(minOdd, 1 / Math.max(drawProb, 0.18)).toFixed(2);
@@ -238,15 +219,7 @@
 
                 renderRating() {
                     const container = document.getElementById('ratingTableContainer');
-                    if (this.loadingError) {
-                        container.innerHTML = `<div class="error-message">⚠️ Ошибка загрузки: ${this.loadingError}</div>`;
-                        return;
-                    }
-                    if (!this.teams.length) {
-                        container.innerHTML = '<div class="empty-state">Нет данных. Добавьте лиги и команды в Supabase.</div>';
-                        return;
-                    }
-                    // ... рендеринг таблицы рейтинга (как раньше)
+                    if (!this.teams.length) { container.innerHTML = '<div class="empty-state">Нет данных</div>'; return; }
                     if (this.currentRatingType === 'clubs') {
                         const sorted = [...this.clubCoeffMap.entries()].sort((a,b) => b[1] - a[1]).slice(0, 30);
                         let html = `<table class="uefa-table"><thead><tr><th>#</th><th>Клуб</th><th>Коэфф.</th><th>Форма</th></tr></thead><tbody>`;
@@ -272,27 +245,146 @@
                     }
                 },
 
-                // Остальные методы (renderLeagues, renderLeagueTable, renderMatches, renderMatchesList, renderAdminPanel, updateMatchResult, showMatchStats, closeModal, switchTab) остаются идентичными предыдущей версии.
-                // Для краткости я не буду их дублировать здесь, но в реальном коде они должны быть.
+                renderLeagues() {
+                    const chips = document.getElementById('leaguesChips');
+                    chips.innerHTML = this.leagues.map(l => 
+                        `<div class="league-chip ${this.selectedLeagueId === l.id ? 'active' : ''}" data-id="${l.id}">${l.country || '🌍'} ${l.name}</div>`
+                    ).join('');
+                    document.getElementById('leagueCount').innerText = `${this.leagues.length} лиг`;
+                    chips.querySelectorAll('.league-chip').forEach(el => el.addEventListener('click', () => {
+                        this.selectedLeagueId = el.dataset.id;
+                        this.renderLeagues();
+                        this.renderLeagueTable();
+                    }));
+                    if (!this.selectedLeagueId && this.leagues.length) this.selectedLeagueId = this.leagues[0].id;
+                    this.renderLeagueTable();
+                },
 
-                // ... скопируйте их из предыдущего ответа ...
+                renderLeagueTable() {
+                    const container = document.getElementById('leagueTableContainer');
+                    const league = this.leagues.find(l => l.id === this.selectedLeagueId);
+                    if (!league) { container.innerHTML = '<div class="empty-state">Выберите лигу</div>'; return; }
+                    const leagueTeams = this.teams.filter(t => t.league_id === this.selectedLeagueId);
+                    const stats = leagueTeams.map(t => ({ team: t, stats: this.teamStatsMap.get(t.id) || { played:0, wins:0, draws:0, losses:0, goals_for:0, goals_against:0, goal_diff:0, points:0 } }))
+                        .sort((a,b) => b.stats.points - a.stats.points || b.stats.goal_diff - a.stats.goal_diff);
+                    let html = `<div style="display:flex; gap:10px; margin-bottom:16px;"><span style="font-size:28px;">${league.country || '🌍'}</span><h3>${league.name}</h3></div>`;
+                    html += `<table class="uefa-table"><thead><tr><th>#</th><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>Мячи</th><th>О</th></tr></thead><tbody>`;
+                    stats.forEach((item, idx) => {
+                        const s = item.stats;
+                        html += `<tr><td>${idx+1}</td><td><div class="team-cell"><div class="team-logo">${item.team.short_name || item.team.name.substring(0,2)}</div>${item.team.name}</div></td>
+                            <td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.goals_for}:${s.goals_against}</td><td><strong>${s.points}</strong></td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    container.innerHTML = html;
+                },
+
+                renderMatches() {
+                    const filter = document.getElementById('leagueFilterSelect');
+                    filter.innerHTML = '<option value="all">Все лиги</option>' + this.leagues.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+                    filter.value = this.selectedMatchLeague;
+                    filter.onchange = () => { this.selectedMatchLeague = filter.value; this.renderMatchesList(); };
+                    this.renderMatchesList();
+                    if (this.isAdmin) this.renderAdminPanel();
+                },
+
+                renderMatchesList() {
+                    const container = document.getElementById('matchesList');
+                    let filtered = this.matches.filter(m => m.status === 'scheduled');
+                    if (this.selectedMatchLeague !== 'all') filtered = filtered.filter(m => m.league_id === this.selectedMatchLeague);
+                    filtered.sort((a,b) => new Date(a.match_date) - new Date(b.match_date));
+                    if (!filtered.length) { container.innerHTML = '<div class="empty-state">Нет предстоящих матчей</div>'; return; }
+                    let html = '';
+                    filtered.slice(0, 20).forEach(m => {
+                        const home = this.teams.find(t => t.id === m.home_team_id);
+                        const away = this.teams.find(t => t.id === m.away_team_id);
+                        if (!home || !away) return;
+                        const odds = this.calculateOdds(m.home_team_id, m.away_team_id);
+                        const date = new Date(m.match_date);
+                        const time = date.toLocaleDateString('ru',{day:'numeric',month:'short'}) + ' ' + date.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+                        html += `<div class="match-item" data-match-id="${m.id}">
+                            <div class="match-info"><div class="match-teams">
+                                <div class="match-team"><div class="team-logo">${home.short_name || home.name.substring(0,2)}</div>${home.name}</div>
+                                <div class="match-team"><div class="team-logo">${away.short_name || away.name.substring(0,2)}</div>${away.name}</div>
+                            </div><div style="font-size:13px; color:var(--hint); margin-top:6px;"><i class="far fa-clock"></i> ${time}</div></div>
+                            <div class="odds-block">
+                                <div class="odd-btn" data-bet="home"><div class="odd-label">1</div><div class="odd-value">${odds.home}</div></div>
+                                <div class="odd-btn" data-bet="draw"><div class="odd-label">X</div><div class="odd-value">${odds.draw}</div></div>
+                                <div class="odd-btn" data-bet="away"><div class="odd-label">2</div><div class="odd-value">${odds.away}</div></div>
+                            </div>
+                        </div>`;
+                    });
+                    container.innerHTML = html;
+                },
+
+                renderAdminPanel() {
+                    const panel = document.getElementById('adminMatchPanel');
+                    const scheduled = this.matches.filter(m => m.status === 'scheduled').slice(0,5);
+                    if (!scheduled.length) { panel.innerHTML = '<p>Нет матчей для ввода</p>'; panel.classList.remove('hidden'); return; }
+                    let html = '<h4>🔧 Админ: внести результат</h4>';
+                    scheduled.forEach(m => {
+                        const home = this.teams.find(t => t.id === m.home_team_id);
+                        const away = this.teams.find(t => t.id === m.away_team_id);
+                        html += `<div style="margin-bottom:16px; padding:12px; background:var(--bg); border-radius:16px;">
+                            <p><strong>${home?.name} vs ${away?.name}</strong> (${new Date(m.match_date).toLocaleDateString()})</p>
+                            <div style="display:flex; gap:8px;">
+                                <input type="number" id="score_${m.id}_home" placeholder="Хозяева">
+                                <input type="number" id="score_${m.id}_away" placeholder="Гости">
+                                <button class="admin-btn" data-match-id="${m.id}">Сохранить</button>
+                            </div>
+                        </div>`;
+                    });
+                    panel.innerHTML = html;
+                    panel.classList.remove('hidden');
+                    panel.querySelectorAll('.admin-btn').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const matchId = btn.dataset.matchId;
+                            const homeScore = +document.getElementById(`score_${matchId}_home`).value;
+                            const awayScore = +document.getElementById(`score_${matchId}_away`).value;
+                            if (isNaN(homeScore) || isNaN(awayScore)) return alert('Введите числа');
+                            await this.updateMatchResult(matchId, homeScore, awayScore);
+                        });
+                    });
+                },
+
+                async updateMatchResult(matchId, homeScore, awayScore) {
+                    const { error } = await supabase.from('matches').update({ 
+                        home_score: homeScore, away_score: awayScore, status: 'finished', updated_at: new Date()
+                    }).eq('id', matchId);
+                    if (error) alert('Ошибка: ' + error.message);
+                    else {
+                        alert('Результат сохранён!');
+                        await this.loadData();
+                        this.renderMatches();
+                        this.renderRating();
+                        this.renderLeagues();
+                    }
+                },
+
+                switchTab(tabId) {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+                    document.getElementById('rating-tab').classList.add('hidden');
+                    document.getElementById('leagues-tab').classList.add('hidden');
+                    document.getElementById('matches-tab').classList.add('hidden');
+                    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    if (tabId === 'rating') this.renderRating();
+                    else if (tabId === 'leagues') { if (this.leagues.length) this.renderLeagues(); }
+                    else if (tabId === 'matches') this.renderMatches();
+                },
+
+                closeModal() { document.getElementById('matchModal').classList.remove('active'); }
             };
 
-            // Инициализация
+            window.app = app;
+
             window.addEventListener('load', async () => {
                 setTimeout(() => {
                     document.getElementById('splash-screen').style.opacity = '0';
                     setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 400);
                 }, 1200);
-                
-                const success = await app.loadData();
-                if (!success) {
-                    // Показываем ошибку во всех вкладках
-                    document.getElementById('ratingTableContainer').innerHTML = `<div class="error-message">⚠️ Ошибка загрузки данных. Проверьте консоль.</div>`;
-                }
+                await app.loadData();
                 app.renderRating();
-                
-                // Обработчики табов и прочее...
+
                 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => app.switchTab(b.dataset.tab)));
                 document.querySelectorAll('.rating-toggle-btn').forEach(btn => btn.addEventListener('click', function() {
                     document.querySelectorAll('.rating-toggle-btn').forEach(b => b.classList.remove('active'));
@@ -300,18 +392,16 @@
                     app.currentRatingType = this.dataset.rating;
                     app.renderRating();
                 }));
-                
-                // Админ-режим по долгому нажатию
+
                 const logo = document.getElementById('adminTrigger');
-                let pressTimer;
-                function startPress() { pressTimer = setTimeout(() => { app.isAdmin = !app.isAdmin; alert('Админ-режим: ' + (app.isAdmin ? 'ВКЛ' : 'ВЫКЛ')); if (app.currentTab === 'matches') app.renderMatches(); }, 1000); }
-                logo.addEventListener('mousedown', startPress);
-                logo.addEventListener('mouseup', () => clearTimeout(pressTimer));
-                logo.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-                logo.addEventListener('touchstart', (e) => { startPress(); });
-                logo.addEventListener('touchend', () => clearTimeout(pressTimer));
-                
-                // Тема
+                let timer;
+                const enableAdmin = () => { app.isAdmin = !app.isAdmin; alert('Админ-режим: ' + (app.isAdmin ? 'ВКЛ' : 'ВЫКЛ')); if (app.currentTab === 'matches') app.renderMatches(); };
+                logo.addEventListener('mousedown', () => { timer = setTimeout(enableAdmin, 1000); });
+                logo.addEventListener('mouseup', () => clearTimeout(timer));
+                logo.addEventListener('mouseleave', () => clearTimeout(timer));
+                logo.addEventListener('touchstart', (e) => { timer = setTimeout(enableAdmin, 1000); });
+                logo.addEventListener('touchend', () => clearTimeout(timer));
+
                 const themeToggle = document.getElementById('themeToggle');
                 themeToggle.addEventListener('click', () => {
                     document.body.classList.toggle('dark');
@@ -324,11 +414,9 @@
                         themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Тема</span>';
                     }
                 });
-                
-                document.querySelector('.modal').addEventListener('click', (e) => { if (e.target.classList.contains('modal')) app.closeModal(); });
-            });
 
-            window.app = app;
+                document.querySelector('.modal').addEventListener('click', e => { if (e.target.classList.contains('modal')) app.closeModal(); });
+            });
         })();
     </script>
 </body>
